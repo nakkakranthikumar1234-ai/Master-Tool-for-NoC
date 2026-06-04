@@ -1,0 +1,2655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCS-AMWAY | Super Set Tool</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Lato:wght@300;400;700&display=swap');
+
+  :root {
+    --beige: #F5F0E8;
+    --beige-dark: #EDE5D5;
+    --beige-mid: #D9CEBC;
+    --maroon: #6B1A2A;
+    --maroon-light: #8B2A3E;
+    --maroon-deep: #4A0F1C;
+    --maroon-soft: #B85570;
+    --text-dark: #2C1A10;
+    --text-mid: #5C3D2E;
+    --text-light: #8C6A5A;
+    --white: #FDFAF6;
+    --shadow: rgba(107,26,42,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--beige);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--maroon-deep);
+    color: var(--beige);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--maroon-soft);
+  }
+  .brand-block { display: flex; flex-direction: column; gap: 2px; }
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: #F5D9A8;
+  }
+  .brand-tagline {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #C9A882;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+  .brand-sub {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #A07855;
+    font-weight: 300;
+    margin-top: 2px;
+  }
+  .tool-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: #D4B896;
+    letter-spacing: 2px;
+  }
+
+  /* ── LAYOUT ── */
+  .app-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 230px;
+    min-width: 230px;
+    background: var(--maroon);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    gap: 6px;
+  }
+  .sidebar-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #C9A882;
+    text-transform: uppercase;
+    padding: 0 20px 12px;
+    font-weight: 700;
+  }
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 20px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: #D4B896;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    text-align: left;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.08); color: #F5D9A8; }
+  .nav-btn.active {
+    background: rgba(245,208,168,0.15);
+    border-left-color: #F5D9A8;
+    color: #F5D9A8;
+    font-weight: 700;
+  }
+  .nav-icon { font-size: 16px; opacity: 0.8; flex-shrink: 0; }
+
+  /* ── CONTENT AREA ── */
+  .content {
+    flex: 1;
+    padding: 32px 40px;
+    overflow-y: auto;
+    background: var(--beige);
+  }
+
+  .tool-panel { display: none; }
+  .tool-panel.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--maroon-soft);
+  }
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--maroon);
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .section-header p {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  /* ── FORM ELEMENTS ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--maroon);
+  }
+  input[type="text"], textarea, select {
+    background: var(--white);
+    border: 1.5px solid var(--beige-mid);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    color: var(--text-dark);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--maroon-soft);
+    box-shadow: 0 0 0 3px rgba(107,26,42,0.08);
+  }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+  /* Autocomplete */
+  .autocomplete-wrap { position: relative; }
+  .autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border: 1.5px solid var(--maroon-soft);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 8px 24px var(--shadow);
+  }
+  .autocomplete-list.show { display: block; }
+  .autocomplete-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-dark);
+    transition: background 0.15s;
+  }
+  .autocomplete-item:hover { background: var(--beige-dark); color: var(--maroon); font-weight: 700; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+  .btn {
+    padding: 11px 24px;
+    border-radius: 6px;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--maroon);
+    color: #F5D9A8;
+    border-color: var(--maroon);
+  }
+  .btn-primary:hover { background: var(--maroon-deep); border-color: var(--maroon-deep); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--maroon);
+    border-color: var(--maroon);
+  }
+  .btn-secondary:hover { background: var(--maroon); color: #F5D9A8; }
+  .btn-success {
+    background: #2A6B3A;
+    color: #D4F5DC;
+    border-color: #2A6B3A;
+  }
+  .btn-success:hover { background: #1A4A28; }
+
+  /* Output box */
+  .output-box {
+    background: var(--white);
+    border: 1.5px solid var(--beige-mid);
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-dark);
+    min-height: 120px;
+    white-space: pre-wrap;
+    font-family: 'Lato', sans-serif;
+    margin-top: 8px;
+  }
+  .output-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 8px;
+  }
+
+  /* Radio group */
+  .radio-group { display: flex; flex-wrap: wrap; gap: 10px; }
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    background: var(--white);
+    border: 1.5px solid var(--beige-mid);
+    border-radius: 20px;
+    padding: 7px 16px;
+    font-size: 13px;
+    color: var(--text-mid);
+    transition: all 0.2s;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .radio-label input { accent-color: var(--maroon); }
+  .radio-label:has(input:checked) {
+    background: var(--maroon);
+    color: #F5D9A8;
+    border-color: var(--maroon);
+    font-weight: 700;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--maroon-deep);
+    color: #F5D9A8;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+    z-index: 9999;
+    pointer-events: none;
+    letter-spacing: 0.5px;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Mail preview card */
+  .mail-card {
+    background: var(--white);
+    border: 1.5px solid var(--beige-mid);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .mail-header-bar {
+    background: var(--maroon-deep);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mail-header-bar span { color: #F5D9A8; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .mail-meta { padding: 14px 20px; border-bottom: 1px solid var(--beige-mid); display: flex; flex-direction: column; gap: 5px; }
+  .mail-meta-row { font-size: 13px; color: var(--text-mid); display: flex; gap: 8px; }
+  .mail-meta-row strong { color: var(--maroon); min-width: 60px; }
+  .mail-body { padding: 18px 20px; font-size: 14px; line-height: 1.8; white-space: pre-wrap; color: var(--text-dark); }
+
+  /* Calculator */
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .result-highlight {
+    background: var(--maroon);
+    color: #F5D9A8;
+    border-radius: 10px;
+    padding: 20px 28px;
+    margin-top: 4px;
+  }
+  .result-highlight .big-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 600;
+    color: #F5D9A8;
+    line-height: 1;
+  }
+  .result-highlight .big-label { font-size: 13px; color: #C9A882; letter-spacing: 1px; margin-top: 4px; }
+
+  .closure-box {
+    background: var(--beige-dark);
+    border: 1.5px solid var(--beige-mid);
+    border-left: 4px solid var(--maroon);
+    border-radius: 8px;
+    padding: 18px 22px;
+    font-size: 14px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: var(--text-dark);
+    margin-top: 8px;
+    font-family: 'Lato', sans-serif;
+  }
+
+  .separator { border: none; border-top: 1.5px solid var(--beige-mid); margin: 28px 0; }
+
+  /* ISP Ticket field toggle */
+  .isp-field-wrap { transition: all 0.3s; }
+
+  .highlight-box {
+    background: rgba(107,26,42,0.06);
+    border: 1px solid rgba(107,26,42,0.15);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+  .highlight-box p { font-size: 13px; color: var(--text-mid); font-weight: 400; }
+  .highlight-box strong { color: var(--maroon); }
+
+  /* ── DATETIME PICKER (Tool C) ── */
+  .dt-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .dt-input-wrap input[type="text"] {
+    padding-right: 40px;
+    cursor: pointer;
+    background: var(--white);
+  }
+  .dt-cal-icon {
+    position: absolute;
+    right: 12px;
+    font-size: 17px;
+    cursor: pointer;
+    color: var(--maroon);
+    pointer-events: none;
+  }
+
+  /* Picker popup */
+  .dt-popup {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 500;
+    background: var(--white);
+    border: 1.5px solid var(--maroon-soft);
+    border-radius: 10px;
+    box-shadow: 0 12px 36px var(--shadow);
+    padding: 16px;
+    min-width: 280px;
+    font-size: 13px;
+  }
+  .dt-popup.show { display: block; }
+
+  .dt-popup-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin-bottom: 12px;
+  }
+
+  /* Calendar grid */
+  .cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .cal-nav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--maroon);
+    font-size: 18px;
+    padding: 0 6px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .cal-month-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 0.5px;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    text-align: center;
+  }
+  .cal-day-hdr {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 0;
+  }
+  .cal-day {
+    padding: 5px 3px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-dark);
+    transition: background 0.15s;
+  }
+  .cal-day:hover { background: var(--beige-dark); }
+  .cal-day.selected { background: var(--maroon); color: #F5D9A8; font-weight: 700; }
+  .cal-day.today { border: 1.5px solid var(--maroon-soft); }
+  .cal-day.empty { pointer-events: none; }
+
+  /* Time picker */
+  .time-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .time-row label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--maroon);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .time-sel {
+    background: var(--white);
+    border: 1.5px solid var(--beige-mid);
+    border-radius: 5px;
+    padding: 5px 8px;
+    font-size: 13px;
+    color: var(--text-dark);
+    outline: none;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+  }
+  .time-sel:focus { border-color: var(--maroon-soft); }
+
+  .dt-confirm-btn {
+    margin-top: 12px;
+    width: 100%;
+    background: var(--maroon);
+    color: #F5D9A8;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .dt-confirm-btn:hover { background: var(--maroon-deep); }
+
+  /* Uptime (HH:MM) popup */
+  .uptime-popup {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 500;
+    background: var(--white);
+    border: 1.5px solid var(--maroon-soft);
+    border-radius: 10px;
+    box-shadow: 0 12px 36px var(--shadow);
+    padding: 16px 20px;
+    min-width: 220px;
+  }
+  .uptime-popup.show { display: block; }
+
+  /* ── TOOL D & E specific ── */
+
+  /* Digital Clock */
+  .clock-widget {
+    background: var(--maroon-deep);
+    border-radius: 10px;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 200px;
+  }
+  .clock-location-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #C9A882;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .clock-time {
+    font-family: 'Courier New', monospace;
+    font-size: 32px;
+    color: #F5D9A8;
+    font-weight: 700;
+    letter-spacing: 4px;
+  }
+  .clock-date {
+    font-size: 11px;
+    color: #A07855;
+    letter-spacing: 1px;
+  }
+  .clock-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    grid-column: 1 / -1;
+    margin-bottom: 4px;
+  }
+
+  /* POC checkboxes pill style */
+  .poc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .poc-check-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    background: var(--white);
+    border: 1.5px solid var(--beige-mid);
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 13px;
+    color: var(--text-mid);
+    transition: all 0.2s;
+    font-weight: 400;
+    max-width: 360px;
+  }
+  .poc-check-label input { accent-color: var(--maroon); width: 16px; height: 16px; }
+  .poc-check-label:has(input:checked) {
+    background: var(--maroon);
+    color: #F5D9A8;
+    border-color: var(--maroon);
+    font-weight: 700;
+  }
+  .poc-empty {
+    font-size: 13px;
+    color: var(--text-light);
+    font-style: italic;
+    padding: 8px 0;
+  }
+
+  /* Two col with clock layout for tool D & E */
+  .form-grid-clock {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 20px;
+  }
+  .form-col { display: flex; flex-direction: column; gap: 20px; }
+  .form-inner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* ── TOOL F – INCM SERVER DETAILS ── */
+  .server-result-card {
+    background: var(--white);
+    border: 1.5px solid var(--beige-mid);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .server-result-header {
+    background: var(--maroon-deep);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .server-result-header span { color: #F5D9A8; font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .server-result-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .server-detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--beige-mid);
+  }
+  .server-detail-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .server-detail-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .server-detail-content { display: flex; flex-direction: column; gap: 2px; }
+  .server-detail-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--maroon);
+  }
+  .server-detail-value { font-size: 14px; color: var(--text-dark); line-height: 1.6; }
+  .server-not-found {
+    background: rgba(107,26,42,0.06);
+    border: 1px solid rgba(107,26,42,0.2);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--maroon);
+    font-style: italic;
+    margin-top: 8px;
+    display: none;
+  }
+
+  /* ── TOOL G – INCIDENT TEMPLATES ── */
+  .template-btn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .template-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--white);
+    border: 1.5px solid var(--beige-mid);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-dark);
+    text-align: left;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+  .template-btn:hover {
+    background: var(--maroon);
+    color: #F5D9A8;
+    border-color: var(--maroon);
+  }
+  .template-btn-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* Template modal overlay */
+  .tpl-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(44,26,16,0.55);
+    z-index: 8000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .tpl-overlay.show { display: flex; }
+  .tpl-modal {
+    background: var(--white);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 60px rgba(44,26,16,0.28);
+    overflow: hidden;
+  }
+  .tpl-modal-header {
+    background: var(--maroon-deep);
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .tpl-modal-title { color: #F5D9A8; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .tpl-modal-close {
+    background: rgba(255,255,255,0.12);
+    border: none;
+    border-radius: 6px;
+    color: #F5D9A8;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 10px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    transition: background 0.2s;
+  }
+  .tpl-modal-close:hover { background: rgba(255,255,255,0.22); }
+  .tpl-modal-body {
+    padding: 22px 26px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .tpl-text {
+    background: var(--beige-dark);
+    border: 1.5px solid var(--beige-mid);
+    border-left: 4px solid var(--maroon);
+    border-radius: 8px;
+    padding: 18px 22px;
+    font-size: 14px;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    color: var(--text-dark);
+    font-family: 'Lato', sans-serif;
+  }
+  .tpl-modal-footer {
+    padding: 14px 26px;
+    border-top: 1.5px solid var(--beige-mid);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+    background: var(--beige);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-block">
+    <div class="brand-name">TCS-AMWAY</div>
+    <div class="brand-tagline">Makes Lives Better With Living</div>
+    <div class="brand-sub">Built for calm in chaos &nbsp;·&nbsp; By Kranthi Kumar Nakka</div>
+  </div>
+  <div class="tool-title">⬡ SUPER SET TOOL</div>
+</header>
+
+<div class="app-body">
+  <nav class="sidebar">
+    <div class="sidebar-label">Tools</div>
+    <button class="nav-btn active" onclick="switchTab('mail')" id="nav-mail">
+      <span class="nav-icon">✉</span>AUTO JIO ISP MAIL
+    </button>
+    <button class="nav-btn" onclick="switchTab('msg')" id="nav-msg">
+      <span class="nav-icon">⚡</span>INCIDENT MESSAGE
+    </button>
+    <button class="nav-btn" onclick="switchTab('calc')" id="nav-calc">
+      <span class="nav-icon">⏱</span>OUTAGE CALCULATOR
+    </button>
+    <button class="nav-btn" onclick="switchTab('poc')" id="nav-poc">
+      <span class="nav-icon">📧</span>AUTO POC MAIL
+    </button>
+    <button class="nav-btn" onclick="switchTab('pocmsg')" id="nav-pocmsg">
+      <span class="nav-icon">💬</span>POC INCIDENT MESSAGE
+    </button>
+    <button class="nav-btn" onclick="switchTab('incmserver')" id="nav-incmserver">
+      <span class="nav-icon">🖥</span>INCM SERVER DETAILS
+    </button>
+    <button class="nav-btn" onclick="switchTab('inctemplates')" id="nav-inctemplates">
+      <span class="nav-icon">📋</span>INCIDENT TEMPLATES
+    </button>
+  </nav>
+
+  <main class="content">
+
+    <!-- ══════════════════════════════════════════════ TOOL A ═══════════════════════════════════════ -->
+    <div class="tool-panel active" id="panel-mail">
+      <div class="section-header">
+        <h2>Auto JIO ISP Mail Generator</h2>
+        <p>Fill in the fields below to generate a professional ISP circuit down escalation mail.</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Incident Number (ServiceNow)</label>
+          <input type="text" id="mail-incident" placeholder="e.g. INC1234567">
+        </div>
+
+        <div class="form-group">
+          <label>Location Name</label>
+          <div class="autocomplete-wrap">
+            <input type="text" id="mail-location" placeholder="Type to search location…" oninput="filterLocations('mail-location','mail-loc-list')" autocomplete="off">
+            <div class="autocomplete-list" id="mail-loc-list"></div>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label>Impacted Devices <span style="font-weight:300;font-size:11px;letter-spacing:0;text-transform:none;color:var(--text-light)">(leave blank to omit from mail)</span></label>
+          <textarea id="mail-devices" placeholder="e.g. Switch-01, AP-Floor2, Firewall-Core (leave blank if none)"></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="draftMail()">✉ Draft Mail</button>
+        <button class="btn btn-secondary" onclick="copyMail()">⎘ Copy Mail</button>
+        <button class="btn btn-success" onclick="openOutlookMail()">📤 Open in Outlook</button>
+      </div>
+
+      <hr class="separator">
+
+      <div id="mail-preview" style="display:none;">
+        <div class="mail-card">
+          <div class="mail-header-bar"><span>✉ Mail Preview</span></div>
+          <div class="mail-meta">
+            <div class="mail-meta-row"><strong>To:</strong> <span id="mp-to"></span></div>
+            <div class="mail-meta-row"><strong>Cc:</strong> <span id="mp-cc"></span></div>
+            <div class="mail-meta-row"><strong>Subject:</strong> <span id="mp-subject"></span></div>
+          </div>
+          <div class="mail-body" id="mp-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ TOOL B ═══════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-msg">
+      <div class="section-header">
+        <h2>Auto Incident Message Generator</h2>
+        <p>Select the scenario and fill in the details to auto-generate an incident update message.</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Location Name</label>
+          <div class="autocomplete-wrap">
+            <input type="text" id="msg-location" placeholder="Type to search location…" oninput="filterLocations('msg-location','msg-loc-list')" autocomplete="off">
+            <div class="autocomplete-list" id="msg-loc-list"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>ServiceNow Incident Number</label>
+          <input type="text" id="msg-incident" placeholder="e.g. INC1234567">
+        </div>
+
+        <div class="form-group full">
+          <label>Link / Issue Type</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="link-type" value="single" onchange="toggleISPField()"> Single Link Down</label>
+            <label class="radio-label"><input type="radio" name="link-type" value="primary" onchange="toggleISPField()"> Primary Link Down</label>
+            <label class="radio-label"><input type="radio" name="link-type" value="secondary" onchange="toggleISPField()"> Secondary Link Down</label>
+            <label class="radio-label"><input type="radio" name="link-type" value="itdevices" onchange="toggleISPField()"> IT Devices Down</label>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label>Business Hours Status</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="biz-hours" value="business"> Business Hours</label>
+            <label class="radio-label"><input type="radio" name="biz-hours" value="offbusiness"> Off Business Hours</label>
+          </div>
+        </div>
+
+        <!-- Single / Primary / Secondary ISP ticket (single field) -->
+        <div class="form-group full isp-field-wrap" id="isp-ticket-wrap" style="display:none;">
+          <label>ISP Ticket Number</label>
+          <input type="text" id="msg-isp-ticket" placeholder="e.g. LKJ0987654">
+        </div>
+
+        <!-- IT Devices dual ISP fields -->
+        <div class="form-group isp-field-wrap" id="isp-primary-wrap" style="display:none;">
+          <label>ISP 1 Ticket Number</label>
+          <input type="text" id="msg-isp-primary" placeholder="e.g. 12345678">
+        </div>
+        <div class="form-group isp-field-wrap" id="isp-secondary-wrap" style="display:none;">
+          <label>ISP 2 Ticket Number</label>
+          <input type="text" id="msg-isp-secondary" placeholder="e.g. 09876543">
+        </div>
+
+        <div class="form-group full">
+          <label>Impacted Devices <span style="font-weight:300;font-size:11px;letter-spacing:0;text-transform:none;color:var(--text-light)">(leave blank to omit)</span></label>
+          <textarea id="msg-devices" placeholder="e.g. Switch-01, AP-Floor2 (leave blank if none)"></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="draftMessage()">⚡ Draft Message</button>
+        <button class="btn btn-secondary" onclick="copyMessage()">⎘ Copy Message</button>
+      </div>
+
+      <hr class="separator">
+
+      <div class="output-label">Generated Message</div>
+      <div class="output-box" id="msg-output">Your generated message will appear here after clicking "Draft Message".</div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ TOOL C ═══════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-calc">
+      <div class="section-header">
+        <h2>Server Outage Time Calculator</h2>
+        <p>Calculate exact server outage duration in seconds and generate a closure template.</p>
+      </div>
+
+      <div class="highlight-box">
+        <p><strong>How it works:</strong> Enter the time the incident was received, the time you started working on it, and the server uptime shown in Task Manager. The tool will reverse-calculate the actual server up time and compute total outage duration in seconds.</p>
+      </div>
+
+      <div class="calc-grid">
+
+        <!-- Incident Received Time -->
+        <div class="form-group" style="position:relative;">
+          <label>Incident Received Time</label>
+          <div class="dt-input-wrap">
+            <input type="text" id="calc-received" placeholder="Click 📅 to pick, or type DD/MM/YYYY HH:MM:SS AM/PM" onclick="toggleDTPicker('recv')" oninput="calcOutage()">
+            <span class="dt-cal-icon" onclick="toggleDTPicker('recv')" style="pointer-events:all;cursor:pointer;">📅</span>
+          </div>
+          <div class="dt-popup" id="dt-popup-recv">
+            <div class="dt-popup-title">Incident Received</div>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" onclick="calNav('recv',-1)">&#8249;</button>
+              <span class="cal-month-label" id="cal-month-recv"></span>
+              <button class="cal-nav-btn" onclick="calNav('recv',1)">&#8250;</button>
+            </div>
+            <div class="cal-grid" id="cal-grid-recv"></div>
+            <div class="time-row">
+              <label>Time:</label>
+              <select class="time-sel" id="cal-hr-recv"></select>
+              <span style="font-weight:700;color:var(--maroon)">:</span>
+              <select class="time-sel" id="cal-min-recv"></select>
+              <span style="font-weight:700;color:var(--maroon)">:</span>
+              <select class="time-sel" id="cal-sec-recv"></select>
+              <select class="time-sel" id="cal-ampm-recv">
+                <option>AM</option><option>PM</option>
+              </select>
+            </div>
+            <button class="dt-confirm-btn" onclick="confirmDT('recv')">✔ Confirm</button>
+          </div>
+        </div>
+
+        <!-- Started Working Time -->
+        <div class="form-group" style="position:relative;">
+          <label>Started Working Time</label>
+          <div class="dt-input-wrap">
+            <input type="text" id="calc-started" placeholder="Click 📅 to pick, or type DD/MM/YYYY HH:MM:SS AM/PM" onclick="toggleDTPicker('start')" oninput="calcOutage()">
+            <span class="dt-cal-icon" onclick="toggleDTPicker('start')" style="pointer-events:all;cursor:pointer;">📅</span>
+          </div>
+          <div class="dt-popup" id="dt-popup-start">
+            <div class="dt-popup-title">Started Working</div>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" onclick="calNav('start',-1)">&#8249;</button>
+              <span class="cal-month-label" id="cal-month-start"></span>
+              <button class="cal-nav-btn" onclick="calNav('start',1)">&#8250;</button>
+            </div>
+            <div class="cal-grid" id="cal-grid-start"></div>
+            <div class="time-row">
+              <label>Time:</label>
+              <select class="time-sel" id="cal-hr-start"></select>
+              <span style="font-weight:700;color:var(--maroon)">:</span>
+              <select class="time-sel" id="cal-min-start"></select>
+              <span style="font-weight:700;color:var(--maroon)">:</span>
+              <select class="time-sel" id="cal-sec-start"></select>
+              <select class="time-sel" id="cal-ampm-start">
+                <option>AM</option><option>PM</option>
+              </select>
+            </div>
+            <button class="dt-confirm-btn" onclick="confirmDT('start')">✔ Confirm</button>
+          </div>
+        </div>
+
+        <!-- Server Uptime -->
+        <div class="form-group" style="position:relative;">
+          <label>Server Uptime (from Task Manager)</label>
+          <div class="dt-input-wrap">
+            <input type="text" id="calc-uptime" placeholder="Click ⏱ to pick, or type D:HH:MM:SS" onclick="toggleUptimePicker()" oninput="calcOutage()">
+            <span class="dt-cal-icon" onclick="toggleUptimePicker()" style="pointer-events:all;cursor:pointer;">⏱</span>
+          </div>
+          <div class="uptime-popup" id="uptime-popup">
+            <div class="dt-popup-title">Server Uptime Duration</div>
+            <div class="time-row" style="margin-top:0; flex-wrap:wrap; gap:8px;">
+              <label>Days:</label>
+              <select class="time-sel" id="upt-day" style="width:60px;"></select>
+              <label>Hrs:</label>
+              <select class="time-sel" id="upt-hr" style="width:60px;"></select>
+              <label>Min:</label>
+              <select class="time-sel" id="upt-min" style="width:60px;"></select>
+              <label>Sec:</label>
+              <select class="time-sel" id="upt-sec" style="width:60px;"></select>
+            </div>
+            <button class="dt-confirm-btn" onclick="confirmUptime()">✔ Confirm</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Root Cause</label>
+          <input type="text" id="calc-rootcause" placeholder="e.g. OS patch reboot / Hardware fault" oninput="calcOutage()">
+        </div>
+      </div>
+
+      <hr class="separator">
+
+      <div id="calc-result" style="display:none;">
+        <div class="result-highlight">
+          <div class="big-num" id="calc-seconds">0</div>
+          <div class="big-label">SECONDS OF OUTAGE</div>
+        </div>
+
+        <div style="margin-top:24px;">
+          <div class="output-label">Incident Closure Template</div>
+          <div class="closure-box" id="calc-closure"></div>
+          <div class="btn-row" style="margin-top:12px;">
+            <button class="btn btn-success" onclick="copyClosure()">⎘ Copy Closure Template</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ TOOL D ═══════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-poc">
+      <div class="section-header">
+        <h2>Auto POC Mail Generation</h2>
+        <p>Generate a professional Point-of-Contact mail for network device down alerts at any location.</p>
+      </div>
+
+      <div class="form-grid">
+
+        <!-- Row 1: Location + Incident -->
+        <div class="form-group">
+          <label>Main Location Name</label>
+          <div class="autocomplete-wrap">
+            <input type="text" id="poc-location" placeholder="Type to search location…"
+              oninput="filterPOCLocations()" autocomplete="off">
+            <div class="autocomplete-list" id="poc-loc-list"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>ServiceNow Incident Number</label>
+          <input type="text" id="poc-incident" placeholder="e.g. INC1234567">
+        </div>
+
+        <!-- Row 2: Sub Location + Impacted Devices -->
+        <div class="form-group">
+          <label>Sub Location <span style="font-weight:300;font-size:11px;letter-spacing:0;text-transform:none;color:var(--text-light)">(optional)</span></label>
+          <input type="text" id="poc-sublocation" placeholder="e.g. Kukatpally">
+        </div>
+
+        <div class="form-group">
+          <label>Impacted Devices <span style="font-weight:300;font-size:11px;letter-spacing:0;text-transform:none;color:var(--text-light)">(for Subject Line)</span></label>
+          <textarea id="poc-devices-subject" placeholder="e.g. ASDFGHOIUYTREW (short name for subject)" style="min-height:60px;"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Impacted Devices <span style="font-weight:300;font-size:11px;letter-spacing:0;text-transform:none;color:var(--text-light)">(for Mail Body)</span></label>
+          <textarea id="poc-devices-body" placeholder="e.g. Full device names for body of mail" style="min-height:60px;"></textarea>
+        </div>
+
+        <!-- Row 3: Select POC (To recipients) -->
+        <div class="form-group full">
+          <label>Select POC (To Recipients)</label>
+          <div class="poc-list" id="poc-recipients-list">
+            <div class="poc-empty">Select a location above to load POC contacts.</div>
+          </div>
+        </div>
+
+        <!-- Row 4: Real-time clock -->
+        <div class="form-group full">
+          <label>Location Real-Time Clock</label>
+          <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+            <div class="clock-widget" id="poc-clock-widget">
+              <div class="clock-location-label" id="poc-clock-loc">—</div>
+              <div class="clock-time" id="poc-clock-time">--:--:--</div>
+              <div class="clock-date" id="poc-clock-date">Select a location</div>
+            </div>
+            <div style="font-size:12px; color:var(--text-light); max-width:280px; line-height:1.6;">
+              Real-time clock of the selected location for reference. This is <strong>not</strong> included in the drafted mail.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="draftPOCMail()">✉ Draft Mail</button>
+        <button class="btn btn-secondary" onclick="copyPOCMail()">⎘ Copy Mail</button>
+        <button class="btn btn-success" onclick="openOutlookPOC()">📤 Open in Outlook</button>
+      </div>
+
+      <hr class="separator">
+
+      <div class="output-label">Drafted Mail Preview</div>
+      <div id="poc-mail-preview" style="display:none;">
+        <div class="mail-card">
+          <div class="mail-header-bar"><span>✉ Mail Preview</span></div>
+          <div class="mail-meta">
+            <div class="mail-meta-row"><strong>To:</strong> <span id="poc-mp-to"></span></div>
+            <div class="mail-meta-row"><strong>Cc:</strong> <span id="poc-mp-cc"></span></div>
+            <div class="mail-meta-row"><strong>Subject:</strong> <span id="poc-mp-subject"></span></div>
+          </div>
+          <div class="mail-body" id="poc-mp-body"></div>
+        </div>
+      </div>
+      <div id="poc-mail-placeholder" class="output-box" style="color:var(--text-light);font-style:italic;">
+        Drafted mail will appear here after clicking "Draft Mail".
+      </div>
+
+    </div><!-- end panel-poc -->
+
+    <!-- ══════════════════════════════════════════════ TOOL E ═══════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-pocmsg">
+      <div class="section-header">
+        <h2>Auto POC Incident Message Generator</h2>
+        <p>Generate a team group chat message after sending POC mail — for off/business hours scenarios.</p>
+      </div>
+
+      <div class="form-grid">
+
+        <!-- Row 1: Location + Incident -->
+        <div class="form-group">
+          <label>Main Location Name</label>
+          <div class="autocomplete-wrap">
+            <input type="text" id="pocmsg-location" placeholder="Type to search location…"
+              oninput="filterPOCMsgLocations()" autocomplete="off">
+            <div class="autocomplete-list" id="pocmsg-loc-list"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Incident Number</label>
+          <input type="text" id="pocmsg-incident" placeholder="e.g. INC1234567">
+        </div>
+
+        <!-- Sub Location -->
+        <div class="form-group full">
+          <label>Sub Location <span style="font-weight:300;font-size:11px;letter-spacing:0;text-transform:none;color:var(--text-light)">(optional)</span></label>
+          <input type="text" id="pocmsg-sublocation" placeholder="e.g. Kukatpally">
+        </div>
+
+        <!-- Row 2: Business Hours + Node/IT toggle -->
+        <div class="form-group">
+          <label>Business Hours Status</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="pocmsg-bh" value="business"> Business Hours</label>
+            <label class="radio-label"><input type="radio" name="pocmsg-bh" value="offbusiness"> Off Business Hours</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Device Type</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="pocmsg-dtype" value="nodes"> Nodes</label>
+            <label class="radio-label"><input type="radio" name="pocmsg-dtype" value="itdevices"> IT Devices</label>
+          </div>
+        </div>
+
+        <!-- Row 3: Impacted Devices -->
+        <div class="form-group full">
+          <label>Impacted Devices <span style="font-weight:300;font-size:11px;letter-spacing:0;text-transform:none;color:var(--text-light)">(optional)</span></label>
+          <textarea id="pocmsg-devices" placeholder="e.g. AJHGFDSAWERTY"></textarea>
+        </div>
+
+        <!-- Row 4: Real-time clock -->
+        <div class="form-group full">
+          <label>Location Real-Time Clock</label>
+          <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+            <div class="clock-widget" id="pocmsg-clock-widget">
+              <div class="clock-location-label" id="pocmsg-clock-loc">—</div>
+              <div class="clock-time" id="pocmsg-clock-time">--:--:--</div>
+              <div class="clock-date" id="pocmsg-clock-date">Select a location</div>
+            </div>
+            <div style="font-size:12px; color:var(--text-light); max-width:280px; line-height:1.6;">
+              Real-time clock of the selected location for reference only. Not included in the drafted message.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="draftPOCMessage()">💬 Draft Message</button>
+        <button class="btn btn-secondary" onclick="copyPOCMessage()">⎘ Copy Message</button>
+      </div>
+
+      <hr class="separator">
+
+      <div class="output-label">Drafted Message</div>
+      <div class="output-box" id="pocmsg-output" style="color:var(--text-light);font-style:italic;">
+        Drafted message will appear here after clicking "Draft Message".
+      </div>
+    </div><!-- end panel-pocmsg -->
+
+
+    <!-- ══════════════════════════════════════════════ TOOL F ═══════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-incmserver">
+      <div class="section-header">
+        <h2>INCM Server Details</h2>
+        <p>Type a server name to instantly view its location, local contacts, phone numbers, and working hours.</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Server Name</label>
+          <div class="autocomplete-wrap">
+            <input type="text" id="incm-server-input" placeholder="e.g. Server 1, Server 2…"
+              oninput="filterINCMServers()" autocomplete="off">
+            <div class="autocomplete-list" id="incm-server-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="server-not-found" id="incm-not-found">
+        No server found matching that name. Please check the name and try again.
+      </div>
+
+      <div id="incm-result-wrap" style="display:none; margin-top:16px;">
+        <div class="server-result-card">
+          <div class="server-result-header">
+            <span>🖥 Server Details — <span id="incm-res-servername"></span></span>
+          </div>
+          <div class="server-result-body">
+            <div class="server-detail-row">
+              <div class="server-detail-icon">📍</div>
+              <div class="server-detail-content">
+                <div class="server-detail-label">Location Name</div>
+                <div class="server-detail-value" id="incm-res-location"></div>
+              </div>
+            </div>
+            <div class="server-detail-row">
+              <div class="server-detail-icon">👤</div>
+              <div class="server-detail-content">
+                <div class="server-detail-label">Local Contact Name(s)</div>
+                <div class="server-detail-value" id="incm-res-contacts"></div>
+              </div>
+            </div>
+            <div class="server-detail-row">
+              <div class="server-detail-icon">📞</div>
+              <div class="server-detail-content">
+                <div class="server-detail-label">Local Contact Number(s)</div>
+                <div class="server-detail-value" id="incm-res-phones"></div>
+              </div>
+            </div>
+            <div class="server-detail-row">
+              <div class="server-detail-icon">🕐</div>
+              <div class="server-detail-content">
+                <div class="server-detail-label">Working Hours</div>
+                <div class="server-detail-value" id="incm-res-hours"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- end panel-incmserver -->
+
+    <!-- ══════════════════════════════════════════════ TOOL G ═══════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-inctemplates">
+      <div class="section-header">
+        <h2>Incident Closure Templates</h2>
+        <p>Select an incident type below to instantly open its closure template — then copy and close.</p>
+      </div>
+
+      <div class="template-btn-grid">
+        <button class="template-btn" onclick="openTemplate('server-genuine')">
+          <span class="template-btn-icon">🔴</span>Server Down — Genuine Alert
+        </button>
+        <button class="template-btn" onclick="openTemplate('server-false')">
+          <span class="template-btn-icon">🟡</span>Server Down — False Alert
+        </button>
+        <button class="template-btn" onclick="openTemplate('server-change')">
+          <span class="template-btn-icon">🔄</span>Server Down — Change Request
+        </button>
+        <button class="template-btn" onclick="openTemplate('server-l2')">
+          <span class="template-btn-icon">👥</span>Server Down — L2 Teams Activity
+        </button>
+        <button class="template-btn" onclick="openTemplate('server-reboot')">
+          <span class="template-btn-icon">🔁</span>Server Reboot
+        </button>
+        <button class="template-btn" onclick="openTemplate('service-down')">
+          <span class="template-btn-icon">⚙️</span>Service Down
+        </button>
+        <button class="template-btn" onclick="openTemplate('linux-cpu')">
+          <span class="template-btn-icon">🐧</span>Linux CPU Utilization
+        </button>
+        <button class="template-btn" onclick="openTemplate('linux-mem')">
+          <span class="template-btn-icon">🐧</span>Linux Memory Utilization
+        </button>
+        <button class="template-btn" onclick="openTemplate('win-cpu')">
+          <span class="template-btn-icon">🪟</span>Windows CPU Utilization
+        </button>
+        <button class="template-btn" onclick="openTemplate('win-mem')">
+          <span class="template-btn-icon">🪟</span>Windows Memory Utilization
+        </button>
+        <button class="template-btn" onclick="openTemplate('win-disk')">
+          <span class="template-btn-icon">💽</span>Windows C Drive Disk Utilization
+        </button>
+        <button class="template-btn" onclick="openTemplate('linux-disk')">
+          <span class="template-btn-icon">💾</span>Linux Disk Utilization
+        </button>
+      </div>
+    </div><!-- end panel-inctemplates -->
+
+    <!-- ── INCIDENT TEMPLATE MODAL ── -->
+    <div class="tpl-overlay" id="tpl-overlay" onclick="closeTplModalOutside(event)">
+      <div class="tpl-modal">
+        <div class="tpl-modal-header">
+          <span class="tpl-modal-title" id="tpl-modal-title">Template</span>
+          <button class="tpl-modal-close" onclick="closeTplModal()">✕ Close</button>
+        </div>
+        <div class="tpl-modal-body">
+          <div class="tpl-text" id="tpl-modal-text"></div>
+        </div>
+        <div class="tpl-modal-footer">
+          <button class="btn btn-success" onclick="copyTplText()">⎘ Copy Template</button>
+          <button class="btn btn-secondary" onclick="closeTplModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  ████████████████████████████████████████████████████████████
+//  ██  LOCATION DATA FOR TOOLS A, B, C                       ██
+//  ██  (Auto JIO ISP Mail | Incident Message | Outage Calc)  ██
+//  ████████████████████████████████████████████████████████████
+//
+//  HOW TO ADD A NEW LOCATION:
+//  Copy ONE block below (from the opening { to the closing },)
+//  and paste it before the closing ]; line.
+//  Fill in all the fields for your new location.
+//
+//  FIELDS EXPLAINED:
+//    name          → Location display name shown in the autocomplete dropdown
+//    circuit       → JIO circuit ID for this location
+//    isp           → ISP name (e.g. "JIO")
+//    ispContact    → ISP To email address
+//    ispCc         → ISP Cc email address
+//    localContact  → Local contact person's name
+//    localPhone    → Local contact phone number
+//    workingHours  → Business hours text shown in mail/message
+//    primaryLink   → Primary link ID
+//    secondaryLink → Secondary link ID
+//
+//  EXAMPLE BLOCK TO COPY AND FILL:
+//  {
+//    name: "City Location Name",
+//    circuit: "CITY-JIO-XXX-XXXXX",
+//    isp: "JIO",
+//    ispContact: "contact@jio.com",
+//    ispCc: "cc@jio.com",
+//    localContact: "Full Name",
+//    localPhone: "9999999999",
+//    workingHours: "10 AM – 6 PM",
+//    primaryLink: "CITY-JIO-PRI-001",
+//    secondaryLink: "CITY-JIO-SEC-002"
+//  },
+//
+// ═══════════════════════════════════════════════════════════════
+const LOCATIONS = [
+  {
+    name: "Hyderabad Shop",
+    circuit: "HYD-JIO-001-ABCDE",
+    isp: "JIO",
+    ispContact: "Priyanka@jio.com",
+    ispCc: "jioesc@jio.com",
+    localContact: "Kranthi Kumar",
+    localPhone: "9876543210",
+    workingHours: "10 AM – 6 PM",
+    primaryLink: "HYD-JIO-PRI-001",
+    secondaryLink: "HYD-JIO-SEC-002"
+  },
+  {
+    name: "Mumbai Hub",
+    circuit: "MUM-JIO-002-FGHIJ",
+    isp: "JIO",
+    ispContact: "Priyanka@jio.com",
+    ispCc: "jioesc@jio.com",
+    localContact: "Rahul Sharma",
+    localPhone: "9123456780",
+    workingHours: "9 AM – 7 PM",
+    primaryLink: "MUM-JIO-PRI-001",
+    secondaryLink: "MUM-JIO-SEC-002"
+  },
+  {
+    name: "Chennai Depot",
+    circuit: "CHE-JIO-003-KLMNO",
+    isp: "JIO",
+    ispContact: "Priyanka@jio.com",
+    ispCc: "jioesc@jio.com",
+    localContact: "Suresh Babu",
+    localPhone: "9988776655",
+    workingHours: "8:30 AM – 6:30 PM",
+    primaryLink: "CHE-JIO-PRI-003",
+    secondaryLink: "CHE-JIO-SEC-004"
+  },
+  {
+    name: "Delhi Store",
+    circuit: "DEL-JIO-004-PQRST",
+    isp: "JIO",
+    ispContact: "Priyanka@jio.com",
+    ispCc: "jioesc@jio.com",
+    localContact: "Amit Verma",
+    localPhone: "9871234567",
+    workingHours: "10 AM – 7 PM",
+    primaryLink: "DEL-JIO-PRI-004",
+    secondaryLink: "DEL-JIO-SEC-005"
+  },
+  {
+    name: "Bangalore Office",
+    circuit: "BLR-JIO-005-UVWXY",
+    isp: "JIO",
+    ispContact: "Priyanka@jio.com",
+    ispCc: "jioesc@jio.com",
+    localContact: "Priya Nair",
+    localPhone: "9845678901",
+    workingHours: "9 AM – 6 PM",
+    primaryLink: "BLR-JIO-PRI-005",
+    secondaryLink: "BLR-JIO-SEC-006"
+  },
+  {
+    name: "Pune Branch",
+    circuit: "PNQ-JIO-006-ZABC1",
+    isp: "JIO",
+    ispContact: "Priyanka@jio.com",
+    ispCc: "jioesc@jio.com",
+    localContact: "Sanjay Pawar",
+    localPhone: "9012345678",
+    workingHours: "9:30 AM – 6:30 PM",
+    primaryLink: "PNQ-JIO-PRI-006",
+    secondaryLink: "PNQ-JIO-SEC-007"
+  },
+  {
+    name: "Kolkata Center",
+    circuit: "KOL-JIO-007-DEF23",
+    isp: "JIO",
+    ispContact: "Priyanka@jio.com",
+    ispCc: "jioesc@jio.com",
+    localContact: "Debashis Roy",
+    localPhone: "9334567890",
+    workingHours: "10 AM – 6 PM",
+    primaryLink: "KOL-JIO-PRI-007",
+    secondaryLink: "KOL-JIO-SEC-008"
+  },
+  {
+    name: "Ahmedabad Shop",
+    circuit: "AMD-JIO-008-GHI45",
+    isp: "JIO",
+    ispContact: "Priyanka@jio.com",
+    ispCc: "jioesc@jio.com",
+    localContact: "Nilesh Patel",
+    localPhone: "9023456789",
+    workingHours: "10 AM – 6 PM",
+    primaryLink: "AMD-JIO-PRI-008",
+    secondaryLink: "AMD-JIO-SEC-009"
+  }
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  ████████████████████████████████████████████████████████████
+//  ██  LOCATION DATA FOR TOOLS D & E                         ██
+//  ██  (Auto POC Mail | POC Incident Message)                ██
+//  ████████████████████████████████████████████████████████████
+//
+//  ╔══════════════════════════════════════════════════════════════╗
+//  ║           HOW TO ADD A NEW LOCATION — READ THIS FIRST       ║
+//  ╠══════════════════════════════════════════════════════════════╣
+//  ║                                                              ║
+//  ║  STEP 1 — Copy this template (the lines between ---):       ║
+//  ║  -----------------------------------------------------------  ║
+//  ║  ,{                                                          ║
+//  ║    name: "City Name",                                        ║
+//  ║    timezone: "Continent/City",   // ← pick from list below  ║
+//  ║    workingHours: "09 AM – 06 PM (Mon-Fri)",                  ║
+//  ║    toContacts: [                                             ║
+//  ║      { name: "Name1", email: "person1@company.com" },        ║
+//  ║      { name: "Name2", email: "person2@company.com" }         ║
+//  ║    ],                                                        ║
+//  ║    ccContacts: [                                             ║
+//  ║      { name: "CCName1", email: "cc1@company.com" }           ║
+//  ║    ]                                                         ║
+//  ║  }                                                           ║
+//  ║  -----------------------------------------------------------  ║
+//  ║                                                              ║
+//  ║  STEP 2 — Paste it just BEFORE the line that says:          ║
+//  ║           // ▼▼▼ ADD YOUR NEW LOCATIONS ABOVE THIS LINE ▼▼▼  ║
+//  ║                                                              ║
+//  ║  STEP 3 — Fill in your values:                               ║
+//  ║   • name         → Location shown in dropdown search         ║
+//  ║   • timezone     → Copy EXACTLY from the list below          ║
+//  ║                    (this controls the real-time digital clock)║
+//  ║   • workingHours → Printed in the drafted message            ║
+//  ║   • toContacts   → POC recipients shown as checkboxes        ║
+//  ║   • ccContacts   → Always CC'd automatically in the mail     ║
+//  ║                                                              ║
+//  ║  ★ THE CLOCK IS FULLY AUTOMATIC — just set the timezone     ║
+//  ║    correctly and the real-time clock will show that          ║
+//  ║    country's live local time. No other code to change.       ║
+//  ║                                                              ║
+//  ╠══════════════════════════════════════════════════════════════╣
+//  ║     TIMEZONE STRINGS FOR ALL 45+ COUNTRIES — COPY EXACTLY   ║
+//  ╠══════════════════════════════════════════════════════════════╣
+//  ║                                                              ║
+//  ║  ── ASIA ──────────────────────────────────────────────      ║
+//  ║  India (IST +5:30)           → "Asia/Kolkata"                ║
+//  ║  Pakistan (PKT +5:00)        → "Asia/Karachi"                ║
+//  ║  Bangladesh (BST +6:00)      → "Asia/Dhaka"                  ║
+//  ║  Sri Lanka (SLST +5:30)      → "Asia/Colombo"                ║
+//  ║  Nepal (NPT +5:45)           → "Asia/Kathmandu"              ║
+//  ║  UAE / Dubai (GST +4:00)     → "Asia/Dubai"                  ║
+//  ║  Saudi Arabia (AST +3:00)    → "Asia/Riyadh"                 ║
+//  ║  Qatar (AST +3:00)           → "Asia/Qatar"                  ║
+//  ║  Kuwait (AST +3:00)          → "Asia/Kuwait"                 ║
+//  ║  Bahrain (AST +3:00)         → "Asia/Bahrain"                ║
+//  ║  Oman (GST +4:00)            → "Asia/Muscat"                 ║
+//  ║  Israel (IST +2/+3)          → "Asia/Jerusalem"              ║
+//  ║  Jordan (EET +2/+3)          → "Asia/Amman"                  ║
+//  ║  Singapore (SGT +8:00)       → "Asia/Singapore"              ║
+//  ║  Malaysia (MYT +8:00)        → "Asia/Kuala_Lumpur"           ║
+//  ║  Thailand (ICT +7:00)        → "Asia/Bangkok"                ║
+//  ║  Indonesia/Jakarta (+7:00)   → "Asia/Jakarta"                ║
+//  ║  Philippines (PST +8:00)     → "Asia/Manila"                 ║
+//  ║  Vietnam (ICT +7:00)         → "Asia/Ho_Chi_Minh"            ║
+//  ║  China (CST +8:00)           → "Asia/Shanghai"               ║
+//  ║  Hong Kong (HKT +8:00)       → "Asia/Hong_Kong"              ║
+//  ║  Taiwan (CST +8:00)          → "Asia/Taipei"                 ║
+//  ║  Japan (JST +9:00)           → "Asia/Tokyo"                  ║
+//  ║  South Korea (KST +9:00)     → "Asia/Seoul"                  ║
+//  ║                                                              ║
+//  ║  ── EUROPE ────────────────────────────────────────────      ║
+//  ║  UK (GMT/BST +0/+1)          → "Europe/London"               ║
+//  ║  Ireland (GMT/IST +0/+1)     → "Europe/Dublin"               ║
+//  ║  France (CET +1/+2)          → "Europe/Paris"                ║
+//  ║  Germany (CET +1/+2)         → "Europe/Berlin"               ║
+//  ║  Netherlands (CET +1/+2)     → "Europe/Amsterdam"            ║
+//  ║  Belgium (CET +1/+2)         → "Europe/Brussels"             ║
+//  ║  Switzerland (CET +1/+2)     → "Europe/Zurich"               ║
+//  ║  Italy (CET +1/+2)           → "Europe/Rome"                 ║
+//  ║  Spain (CET +1/+2)           → "Europe/Madrid"               ║
+//  ║  Poland (CET +1/+2)          → "Europe/Warsaw"               ║
+//  ║  Sweden (CET +1/+2)          → "Europe/Stockholm"            ║
+//  ║  Russia / Moscow (MSK +3:00) → "Europe/Moscow"               ║
+//  ║                                                              ║
+//  ║  ── AMERICAS ──────────────────────────────────────────      ║
+//  ║  USA Eastern (EST/EDT -5/-4) → "America/New_York"            ║
+//  ║  USA Central (CST/CDT -6/-5) → "America/Chicago"             ║
+//  ║  USA Mountain (MST/MDT)      → "America/Denver"              ║
+//  ║  USA Pacific (PST/PDT -8/-7) → "America/Los_Angeles"         ║
+//  ║  Canada / Toronto (ET)       → "America/Toronto"             ║
+//  ║  Canada / Vancouver (PT)     → "America/Vancouver"           ║
+//  ║  Mexico City (CST/CDT)       → "America/Mexico_City"         ║
+//  ║  Brazil / Sao Paulo (BRT -3) → "America/Sao_Paulo"           ║
+//  ║  Argentina (ART -3:00)       → "America/Argentina/Buenos_Aires" ║
+//  ║  Colombia (COT -5:00)        → "America/Bogota"              ║
+//  ║  Chile (CLT -4/-3)           → "America/Santiago"            ║
+//  ║                                                              ║
+//  ║  ── AFRICA ────────────────────────────────────────────      ║
+//  ║  South Africa (SAST +2:00)   → "Africa/Johannesburg"         ║
+//  ║  Egypt (EET +2/+3)           → "Africa/Cairo"                ║
+//  ║  Kenya (EAT +3:00)           → "Africa/Nairobi"              ║
+//  ║  Nigeria (WAT +1:00)         → "Africa/Lagos"                ║
+//  ║  Morocco (WET +0/+1)         → "Africa/Casablanca"           ║
+//  ║  Ghana (GMT +0:00)           → "Africa/Accra"                ║
+//  ║                                                              ║
+//  ║  ── OCEANIA ───────────────────────────────────────────      ║
+//  ║  Australia / Sydney (AEST)   → "Australia/Sydney"            ║
+//  ║  Australia / Melbourne       → "Australia/Melbourne"         ║
+//  ║  Australia / Perth (AWST)    → "Australia/Perth"             ║
+//  ║  New Zealand (NZST +12)      → "Pacific/Auckland"            ║
+//  ║                                                              ║
+//  ╚══════════════════════════════════════════════════════════════╝
+//
+// ═══════════════════════════════════════════════════════════════
+//  ▼▼▼  YOUR LOCATION LIST STARTS HERE  ▼▼▼
+// ═══════════════════════════════════════════════════════════════
+const POC_LOCATIONS = [
+
+  // ── LOCATION 1 ─────────────────────────────────────────────
+  //  HOW TO EDIT: Change name, timezone (copy from above list),
+  //  workingHours, toContacts, ccContacts for this location.
+  {
+    name: "Hyderabad",
+    timezone: "Asia/Kolkata",            // ← India real-time clock
+    workingHours: "10 AM – 06 PM (Mon-Fri), 10 AM to 01 PM (Sat-Sun)",
+    toContacts: [
+      { name: "Kranthi",   email: "kranthi@gmail.com" },
+      { name: "Priyanka",  email: "Priyank@gmail.com" }
+    ],
+    ccContacts: [
+      { name: "Srinivas",  email: "srinivas@gmail.com" },
+      { name: "Elena",     email: "elena@gmail.com" }
+    ]
+  },
+
+  // ── LOCATION 2 ─────────────────────────────────────────────
+  {
+    name: "New York",
+    timezone: "America/New_York",        // ← USA Eastern real-time clock
+    workingHours: "09 AM – 06 PM (Mon-Fri)",
+    toContacts: [
+      { name: "Srinivas",  email: "srinivas@gmail.com" },
+      { name: "Elena",     email: "elena@gmail.com" }
+    ],
+    ccContacts: [
+      { name: "Kranthi",   email: "kranthi@gmail.com" },
+      { name: "Priyanka",  email: "Priyank@gmail.com" }
+    ]
+  },
+
+  // ── LOCATION 3 ─────────────────────────────────────────────
+  {
+    name: "Mumbai",
+    timezone: "Asia/Kolkata",            // ← India real-time clock
+    workingHours: "09 AM – 07 PM (Mon-Fri), 09 AM to 01 PM (Sat)",
+    toContacts: [
+      { name: "Rahul",     email: "rahul@gmail.com" },
+      { name: "Priyanka",  email: "Priyank@gmail.com" }
+    ],
+    ccContacts: [
+      { name: "Kranthi",   email: "kranthi@gmail.com" }
+    ]
+  },
+
+  // ── LOCATION 4 ─────────────────────────────────────────────
+  {
+    name: "London",
+    timezone: "Europe/London",           // ← UK real-time clock (auto GMT/BST)
+    workingHours: "09 AM – 06 PM (Mon-Fri)",
+    toContacts: [
+      { name: "James",     email: "james@company.com" },
+      { name: "Sarah",     email: "sarah@company.com" }
+    ],
+    ccContacts: [
+      { name: "Kranthi",   email: "kranthi@gmail.com" }
+    ]
+  },
+
+  // ── LOCATION 5 ─────────────────────────────────────────────
+  {
+    name: "Singapore",
+    timezone: "Asia/Singapore",          // ← Singapore real-time clock
+    workingHours: "09 AM – 06 PM (Mon-Fri)",
+    toContacts: [
+      { name: "Wei",       email: "wei@company.com" },
+      { name: "Meera",     email: "meera@company.com" }
+    ],
+    ccContacts: [
+      { name: "Kranthi",   email: "kranthi@gmail.com" }
+    ]
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  ▼▼▼  ADD YOUR NEW LOCATIONS ABOVE THIS LINE  ▼▼▼
+  //
+  //  COPY THE BLOCK BELOW, REMOVE THE // FROM EACH LINE, FILL IN:
+  //
+  //  ,{
+  //    name: "City Name",
+  //    timezone: "Continent/City",      // ← copy from list at top
+  //    workingHours: "09 AM – 06 PM (Mon-Fri)",
+  //    toContacts: [
+  //      { name: "Name1", email: "email1@company.com" },
+  //      { name: "Name2", email: "email2@company.com" }
+  //    ],
+  //    ccContacts: [
+  //      { name: "CCName", email: "cc@company.com" }
+  //    ]
+  //  }
+  //
+  //  NOTE: The last location block must NOT have a comma after }
+  //        All other blocks above it must have a comma after }
+  // ═══════════════════════════════════════════════════════════════
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.getElementById('nav-' + tab).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  AUTOCOMPLETE (generic – Tools A, B, C)
+// ═══════════════════════════════════════════════════════════════
+function filterLocations(inputId, listId) {
+  const val = document.getElementById(inputId).value.toLowerCase().trim();
+  const list = document.getElementById(listId);
+  list.innerHTML = '';
+  if (!val) { list.classList.remove('show'); return; }
+  const matches = LOCATIONS.filter(l => l.name.toLowerCase().includes(val));
+  if (!matches.length) { list.classList.remove('show'); return; }
+  matches.forEach(loc => {
+    const item = document.createElement('div');
+    item.className = 'autocomplete-item';
+    item.textContent = loc.name;
+    item.onclick = () => {
+      document.getElementById(inputId).value = loc.name;
+      list.classList.remove('show');
+    };
+    list.appendChild(item);
+  });
+  list.classList.add('show');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.autocomplete-list').forEach(l => {
+    if (!l.previousElementSibling.contains(e.target)) l.classList.remove('show');
+  });
+});
+
+function getLocation(name) {
+  return LOCATIONS.find(l => l.name.toLowerCase() === name.toLowerCase().trim()) || null;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOOL A – MAIL GENERATOR
+// ═══════════════════════════════════════════════════════════════
+let mailData = { subject: '', body: '' };
+
+function draftMail() {
+  const incident = document.getElementById('mail-incident').value.trim();
+  const locName = document.getElementById('mail-location').value.trim();
+  const devices = document.getElementById('mail-devices').value.trim();
+  const loc = getLocation(locName);
+
+  if (!incident) { showToast('⚠ Please enter an Incident Number'); return; }
+  if (!locName) { showToast('⚠ Please enter a Location Name'); return; }
+  if (!loc) { showToast('⚠ Location not found in master data. Please check spelling.'); return; }
+
+  const subject = `Major Incident – ${incident} | JIO link is down at ${loc.name}, India`;
+  let devicesLine = devices ? `\nImpacted Devices – ${devices}` : '';
+
+  const body =
+`Hi JIO Team,
+
+We have received the below circuit down at ${loc.name}, India. Please create a troubleshooting ticket on the issue and work on high priority.
+
+Location – ${loc.name}
+Circuit ID – ${loc.circuit}
+Local Contact Name – ${loc.localContact}
+Local Contact Number – ${loc.localPhone}
+Working Hours – ${loc.workingHours}${devicesLine}
+
+Please look into this on priority and provide an update at the earliest.
+
+Regards,
+Kranthi Kumar Nakka
+TCS-AMWAY | Network Operations`;
+
+  mailData = { subject, body };
+
+  document.getElementById('mp-to').textContent = loc.ispContact;
+  document.getElementById('mp-cc').textContent = loc.ispCc;
+  document.getElementById('mp-subject').textContent = subject;
+  document.getElementById('mp-body').textContent = body;
+  document.getElementById('mail-preview').style.display = 'block';
+  showToast('✔ Mail drafted successfully');
+}
+
+function copyMail() {
+  if (!mailData.subject) { showToast('⚠ Draft the mail first'); return; }
+  const full = `Subject: ${mailData.subject}\n\n${mailData.body}`;
+  navigator.clipboard.writeText(full).then(() => showToast('✔ Mail copied to clipboard'));
+}
+
+function openOutlookMail() {
+  if (!mailData.subject) { showToast('⚠ Draft the mail first'); return; }
+  const loc = getLocation(document.getElementById('mail-location').value.trim());
+  if (!loc) { showToast('⚠ Location not found'); return; }
+  const toParam = encodeURIComponent(loc.ispContact);
+  const ccParam = encodeURIComponent(loc.ispCc);
+  const subParam = encodeURIComponent(mailData.subject);
+  const bodyParam = encodeURIComponent(mailData.body);
+  window.location.href = `mailto:${toParam}?cc=${ccParam}&subject=${subParam}&body=${bodyParam}`;
+  showToast('✔ Opening mail client…');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOOL B – INCIDENT MESSAGE GENERATOR
+// ═══════════════════════════════════════════════════════════════
+function toggleISPField() {
+  var lt = document.querySelector('input[name="link-type"]:checked');
+  var bh = document.querySelector('input[name="biz-hours"]:checked');
+  var isBusiness = bh && bh.value === 'business';
+  var ltVal = lt ? lt.value : '';
+  var needsSingleISP = isBusiness && (ltVal === 'single' || ltVal === 'primary' || ltVal === 'secondary');
+  document.getElementById('isp-ticket-wrap').style.display = needsSingleISP ? '' : 'none';
+  var needsDualISP = false;
+  document.getElementById('isp-primary-wrap').style.display = needsDualISP ? '' : 'none';
+  document.getElementById('isp-secondary-wrap').style.display = needsDualISP ? '' : 'none';
+}
+
+document.querySelectorAll('input[name="biz-hours"]').forEach(r => r.addEventListener('change', toggleISPField));
+
+function draftMessage() {
+  const locName = document.getElementById('msg-location').value.trim();
+  const incident = document.getElementById('msg-incident').value.trim();
+  const ltEl = document.querySelector('input[name="link-type"]:checked');
+  const bhEl = document.querySelector('input[name="biz-hours"]:checked');
+  const devices = document.getElementById('msg-devices').value.trim();
+  const ispTicket = document.getElementById('msg-isp-ticket').value.trim();
+  const ispPrimary = document.getElementById('msg-isp-primary').value.trim();
+  const ispSecondary = document.getElementById('msg-isp-secondary').value.trim();
+
+  if (!locName) { showToast('⚠ Please enter a Location Name'); return; }
+  if (!incident) { showToast('⚠ Please enter an Incident Number'); return; }
+  if (!ltEl) { showToast('⚠ Please select a Link / Issue Type'); return; }
+  if (!bhEl) { showToast('⚠ Please select Business Hours Status'); return; }
+
+  const loc = getLocation(locName);
+  if (!loc) { showToast('⚠ Location not found in master data. Please check spelling.'); return; }
+
+  const lt = ltEl.value;
+  const bh = bhEl.value;
+  const devLine = devices ? `\n${devices}` : '';
+  const hoursLine = `\nWorking Hours – ${loc.workingHours}`;
+  let msg = '';
+
+  if (lt === 'single' && bh === 'offbusiness') {
+    msg = `Hi Kranthi,\n\nP2-${incident}-Single Link ${loc.primaryLink} is down at ${loc.name}, India. However, there is no business impact as these are off business hours. We will follow up with LC prior to business hours start and keep you posted with further update.${hoursLine}${devLine}`;
+  } else if (lt === 'single' && bh === 'business') {
+    if (!ispTicket) { showToast('⚠ Please enter the ISP Ticket Number'); return; }
+    msg = `Hi Kranthi,\n\nP2-${incident}-Single Link ${loc.primaryLink} is down at ${loc.name}, India. However, we have raised ISP-${ispTicket} with ${loc.isp}. We will follow up with ISP and keep you posted with further update.${hoursLine}${devLine}`;
+  } else if (lt === 'primary' && bh === 'offbusiness') {
+    msg = `Hi Kranthi,\n\nP2-${incident}-Primary Link ${loc.primaryLink} is down at ${loc.name}, India. However, there is no business impact as secondary link ${loc.secondaryLink} is working fine and these are off business hours. We will follow up with LC and keep you posted with further updates.${hoursLine}${devLine}`;
+  } else if (lt === 'primary' && bh === 'business') {
+    if (!ispTicket) { showToast('⚠ Please enter the ISP Ticket Number'); return; }
+    msg = `Hi Kranthi,\n\nP2-${incident}-Primary Link ${loc.primaryLink} is down at ${loc.name}, India. However, there is no business impact as secondary link ${loc.secondaryLink} is working fine. In Parallel, we have raised an ISP ${ispTicket} with ${loc.isp}. We will follow up with ISP and keep you posted with further update.${hoursLine}${devLine}`;
+  } else if (lt === 'secondary' && bh === 'offbusiness') {
+    msg = `Hi Kranthi,\n\nP2-${incident}-Secondary Link ${loc.secondaryLink} is down at ${loc.name}, India. However, there is no business impact as primary link ${loc.primaryLink} is working fine and these are off business hours. We will follow up with LC and keep you posted with further updates.${hoursLine}${devLine}`;
+  } else if (lt === 'secondary' && bh === 'business') {
+    if (!ispTicket) { showToast('⚠ Please enter the ISP Ticket Number'); return; }
+    msg = `Hi Kranthi,\n\nP2-${incident}-Secondary Link ${loc.secondaryLink} is down at ${loc.name}, India. However, there is no business impact as primary link ${loc.primaryLink} is working fine. In Parallel, we have raised an ISP ${ispTicket} with ${loc.isp}. We will follow up with ISP and keep you posted with further update.${hoursLine}${devLine}`;
+  } else if (lt === 'itdevices' && bh === 'offbusiness') {
+    msg = `Hi Kranthi,\n\nP2-${incident}-All IT Devices are down at ${loc.name}, India. Suspecting power outage at the site. However, there is no business impact as these are off business hours. We will follow up with LC prior to business hours start and keep you posted with further update.${hoursLine}${devLine}`;
+  } else if (lt === 'itdevices' && bh === 'business') {
+    msg = `Hi Kranthi,\n\nP2-${incident}-All IT Devices are down at ${loc.name}, India. We will follow up with LC and keep you posted with further update.${hoursLine}${devLine}`;
+  }
+
+  document.getElementById('msg-output').textContent = msg;
+  showToast('✔ Message generated');
+}
+
+function copyMessage() {
+  const txt = document.getElementById('msg-output').textContent;
+  if (!txt || txt.includes('Your generated message')) { showToast('⚠ Generate a message first'); return; }
+  navigator.clipboard.writeText(txt).then(() => showToast('✔ Message copied to clipboard'));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOOL C – OUTAGE CALCULATOR + DATETIME PICKERS
+// ═══════════════════════════════════════════════════════════════
+
+// ── Calendar state per picker id ('recv' | 'start') ──
+const calState = {
+  recv:  { year: null, month: null, day: null, hr: 10, min: 0, ampm: 'AM' },
+  start: { year: null, month: null, day: null, hr: 10, min: 0, ampm: 'AM' }
+};
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAY_HDRS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+function initCalPickers() {
+  ['recv','start'].forEach(id => {
+    // populate hour select
+    const hrEl = document.getElementById('cal-hr-' + id);
+    hrEl.innerHTML = '';
+    for (let h = 1; h <= 12; h++) {
+      const opt = document.createElement('option');
+      opt.value = h; opt.textContent = String(h).padStart(2,'0');
+      hrEl.appendChild(opt);
+    }
+    hrEl.value = 10;
+
+    // populate minute select (all 0-59)
+    const minEl = document.getElementById('cal-min-' + id);
+    minEl.innerHTML = '';
+    for (let m = 0; m < 60; m++) {
+      const opt = document.createElement('option');
+      opt.value = m; opt.textContent = String(m).padStart(2,'0');
+      minEl.appendChild(opt);
+    }
+    minEl.value = 0;
+
+    // populate seconds select (0-59)
+    const secEl = document.getElementById('cal-sec-' + id);
+    secEl.innerHTML = '';
+    for (let s = 0; s < 60; s++) {
+      const opt = document.createElement('option');
+      opt.value = s; opt.textContent = String(s).padStart(2,'0');
+      secEl.appendChild(opt);
+    }
+    secEl.value = 0;
+
+    const now = new Date();
+    calState[id].year  = now.getFullYear();
+    calState[id].month = now.getMonth();
+    renderCalendar(id);
+  });
+
+  // populate uptime: Days (0-30)
+  const uDay = document.getElementById('upt-day');
+  uDay.innerHTML = '';
+  for (let d = 0; d <= 30; d++) {
+    const o = document.createElement('option');
+    o.value = d; o.textContent = d;
+    uDay.appendChild(o);
+  }
+
+  // populate uptime: Hours (0-23)
+  const uHr = document.getElementById('upt-hr');
+  uHr.innerHTML = '';
+  for (let h = 0; h < 24; h++) {
+    const o = document.createElement('option');
+    o.value = h; o.textContent = String(h).padStart(2,'0');
+    uHr.appendChild(o);
+  }
+
+  // populate uptime: Minutes (0-59)
+  const uMin = document.getElementById('upt-min');
+  uMin.innerHTML = '';
+  for (let m = 0; m < 60; m++) {
+    const o = document.createElement('option');
+    o.value = m; o.textContent = String(m).padStart(2,'0');
+    uMin.appendChild(o);
+  }
+
+  // populate uptime: Seconds (0-59)
+  const uSec = document.getElementById('upt-sec');
+  uSec.innerHTML = '';
+  for (let s = 0; s < 60; s++) {
+    const o = document.createElement('option');
+    o.value = s; o.textContent = String(s).padStart(2,'0');
+    uSec.appendChild(o);
+  }
+}
+
+function renderCalendar(id) {
+  const s = calState[id];
+  document.getElementById('cal-month-' + id).textContent = MONTHS[s.month] + ' ' + s.year;
+  const grid = document.getElementById('cal-grid-' + id);
+  grid.innerHTML = '';
+
+  DAY_HDRS.forEach(h => {
+    const d = document.createElement('div');
+    d.className = 'cal-day-hdr';
+    d.textContent = h;
+    grid.appendChild(d);
+  });
+
+  const firstDay = new Date(s.year, s.month, 1).getDay();
+  const daysInMonth = new Date(s.year, s.month + 1, 0).getDate();
+  const today = new Date();
+
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    grid.appendChild(empty);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    if (d === s.day) cell.classList.add('selected');
+    if (d === today.getDate() && s.month === today.getMonth() && s.year === today.getFullYear())
+      cell.classList.add('today');
+    cell.textContent = d;
+    cell.onclick = () => {
+      calState[id].day = d;
+      renderCalendar(id);
+    };
+    grid.appendChild(cell);
+  }
+}
+
+function calNav(id, dir) {
+  const s = calState[id];
+  s.month += dir;
+  if (s.month < 0)  { s.month = 11; s.year--; }
+  if (s.month > 11) { s.month = 0;  s.year++; }
+  renderCalendar(id);
+}
+
+function toggleDTPicker(id) {
+  // close all pickers first
+  document.querySelectorAll('.dt-popup, .uptime-popup').forEach(p => p.classList.remove('show'));
+  const popup = document.getElementById('dt-popup-' + id);
+  popup.classList.toggle('show');
+}
+
+function toggleUptimePicker() {
+  document.querySelectorAll('.dt-popup, .uptime-popup').forEach(p => p.classList.remove('show'));
+  document.getElementById('uptime-popup').classList.toggle('show');
+}
+
+function confirmDT(id) {
+  const s = calState[id];
+  if (!s.day) { showToast('⚠ Please select a date'); return; }
+  const hrEl   = document.getElementById('cal-hr-' + id);
+  const minEl  = document.getElementById('cal-min-' + id);
+  const secEl  = document.getElementById('cal-sec-' + id);
+  const ampmEl = document.getElementById('cal-ampm-' + id);
+  const hr   = parseInt(hrEl.value);
+  const mn   = parseInt(minEl.value);
+  const sc   = parseInt(secEl.value);
+  const ampm = ampmEl.value;
+  const dateStr = String(s.day).padStart(2,'0') + '/' + String(s.month+1).padStart(2,'0') + '/' + s.year;
+  const timeStr = String(hr).padStart(2,'0') + ':' + String(mn).padStart(2,'0') + ':' + String(sc).padStart(2,'0') + ' ' + ampm;
+  const inputId = id === 'recv' ? 'calc-received' : 'calc-started';
+  document.getElementById(inputId).value = dateStr + '  ' + timeStr;
+  document.getElementById('dt-popup-' + id).classList.remove('show');
+  calState[id].hr = hr; calState[id].min = mn; calState[id].sec = sc; calState[id].ampm = ampm;
+  calcOutage();
+}
+
+function confirmUptime() {
+  const d = parseInt(document.getElementById('upt-day').value);
+  const h = parseInt(document.getElementById('upt-hr').value);
+  const m = parseInt(document.getElementById('upt-min').value);
+  const s = parseInt(document.getElementById('upt-sec').value);
+  document.getElementById('calc-uptime').value = d + ':' + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  document.getElementById('uptime-popup').classList.remove('show');
+  calcOutage();
+}
+
+// close pickers when clicking outside
+document.addEventListener('click', e => {
+  document.querySelectorAll('.dt-popup, .uptime-popup').forEach(p => {
+    const wrap = p.closest('.form-group');
+    if (wrap && !wrap.contains(e.target)) p.classList.remove('show');
+  });
+}, true);
+
+function parseTimeFromInput(str) {
+  // Handles "DD/MM/YYYY  HH:MM:SS AM/PM" from picker OR raw typed formats
+  if (!str) return null;
+  str = str.trim();
+  // Picker format: DD/MM/YYYY HH:MM:SS AM/PM
+  const pickerM = str.match(/\d{2}\/\d{2}\/\d{4}\s+(\d{1,2}):(\d{2}):?(\d{2})?\s*(AM|PM)/i);
+  if (pickerM) {
+    let h = parseInt(pickerM[1]), mn = parseInt(pickerM[2]), sc = parseInt(pickerM[3]||0);
+    const ap = pickerM[4].toUpperCase();
+    if (ap === 'PM' && h !== 12) h += 12;
+    if (ap === 'AM' && h === 12) h = 0;
+    return h * 3600 + mn * 60 + sc;
+  }
+  // Raw format: HH:MM:SS AM/PM or HH:MM AM/PM
+  const rawM = str.toUpperCase().match(/^(\d{1,2}):(\d{2}):?(\d{2})?\s*(AM|PM)?$/);
+  if (rawM) {
+    let h = parseInt(rawM[1]), mn = parseInt(rawM[2]), sc = parseInt(rawM[3]||0);
+    const ap = rawM[4];
+    if (ap === 'PM' && h !== 12) h += 12;
+    if (ap === 'AM' && h === 12) h = 0;
+    if (h > 23 || mn > 59 || sc > 59) return null;
+    return h * 3600 + mn * 60 + sc;
+  }
+  return null;
+}
+
+function parseUptime(str) {
+  if (!str) return null;
+  str = str.trim();
+  // Format: D:HH:MM:SS (from picker)
+  const m4 = str.match(/^(\d+):(\d{2}):(\d{2}):(\d{2})$/);
+  if (m4) return parseInt(m4[1])*86400 + parseInt(m4[2])*3600 + parseInt(m4[3])*60 + parseInt(m4[4]);
+  // Format: HH:MM:SS
+  const m3 = str.match(/^(\d+):(\d{2}):(\d{2})$/);
+  if (m3) return parseInt(m3[1])*3600 + parseInt(m3[2])*60 + parseInt(m3[3]);
+  // Format: HH:MM
+  const m2 = str.match(/^(\d+):(\d{2})$/);
+  if (m2) return parseInt(m2[1])*3600 + parseInt(m2[2])*60;
+  return null;
+}
+
+function calcOutage() {
+  const recv    = parseTimeFromInput(document.getElementById('calc-received').value);
+  const started = parseTimeFromInput(document.getElementById('calc-started').value);
+  const uptime  = parseUptime(document.getElementById('calc-uptime').value);
+  const rootCause = document.getElementById('calc-rootcause').value.trim() || '<Enter Root Cause Here>';
+
+  if (recv === null || started === null || uptime === null) {
+    document.getElementById('calc-result').style.display = 'none';
+    return;
+  }
+
+  // All values now in seconds
+  const serverUpAt = started - uptime;
+  let outageSecs = serverUpAt - recv;
+  if (outageSecs < 0) outageSecs = 0;
+
+  document.getElementById('calc-seconds').textContent = outageSecs;
+  document.getElementById('calc-result').style.display = 'block';
+
+  const closure =
+`Root cause for the server down time - ${rootCause}
+
+This is a genuine alert.
+Server outage in seconds : ${outageSecs} seconds
+
+Hence, proceeding to close the incident.`;
+
+  document.getElementById('calc-closure').textContent = closure;
+}
+
+function copyClosure() {
+  const txt = document.getElementById('calc-closure').textContent;
+  if (!txt) { showToast('⚠ Calculate outage first'); return; }
+  navigator.clipboard.writeText(txt).then(() => showToast('✔ Closure template copied to clipboard'));
+}
+
+// init pickers on load
+document.addEventListener('DOMContentLoaded', initCalPickers);
+
+// ═══════════════════════════════════════════════════════════════
+//  TOOL D & E – POC LOCATION HELPERS
+// ═══════════════════════════════════════════════════════════════
+function getPOCLocation(name) {
+  return POC_LOCATIONS.find(l => l.name.toLowerCase() === name.toLowerCase().trim()) || null;
+}
+
+// Generic autocomplete for POC tools
+function filterPOCAutoComplete(inputId, listId, onSelect) {
+  const val = document.getElementById(inputId).value.toLowerCase().trim();
+  const list = document.getElementById(listId);
+  list.innerHTML = '';
+  if (!val) { list.classList.remove('show'); return; }
+  const matches = POC_LOCATIONS.filter(l => l.name.toLowerCase().includes(val));
+  if (!matches.length) { list.classList.remove('show'); return; }
+  matches.forEach(loc => {
+    const item = document.createElement('div');
+    item.className = 'autocomplete-item';
+    item.textContent = loc.name;
+    item.onclick = () => {
+      document.getElementById(inputId).value = loc.name;
+      list.classList.remove('show');
+      onSelect(loc);
+    };
+    list.appendChild(item);
+  });
+  list.classList.add('show');
+}
+
+// ── REAL-TIME CLOCK ENGINE ──
+// We maintain separate interval handles for Tool D & E clocks
+let pocClockInterval = null;
+let pocmsgClockInterval = null;
+
+function startClock(timezone, locName, timeElId, dateElId, locElId, existingInterval) {
+  if (existingInterval) clearInterval(existingInterval);
+  function tick() {
+    try {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-GB', { timeZone: timezone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      const dateStr = now.toLocaleDateString('en-GB', { timeZone: timezone, weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+      document.getElementById(timeElId).textContent = timeStr;
+      document.getElementById(dateElId).textContent = dateStr;
+      document.getElementById(locElId).textContent = locName;
+    } catch(e) {}
+  }
+  tick();
+  return setInterval(tick, 1000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOOL D – AUTO POC MAIL GENERATION
+// ═══════════════════════════════════════════════════════════════
+let pocMailData = { to:'', cc:'', subject:'', body:'' };
+
+function filterPOCLocations() {
+  filterPOCAutoComplete('poc-location', 'poc-loc-list', onPOCLocationSelect);
+}
+
+function onPOCLocationSelect(loc) {
+  // Load POC checkboxes
+  const container = document.getElementById('poc-recipients-list');
+  container.innerHTML = '';
+  if (!loc.toContacts || !loc.toContacts.length) {
+    container.innerHTML = '<div class="poc-empty">No POC contacts configured for this location.</div>';
+    return;
+  }
+  loc.toContacts.forEach((contact, idx) => {
+    const lbl = document.createElement('label');
+    lbl.className = 'poc-check-label';
+    lbl.innerHTML = `<input type="checkbox" name="poc-to-check" value="${contact.name}" data-email="${contact.email}" ${idx === 0 ? 'checked' : ''}> ${contact.name} &nbsp;<span style="font-size:11px;opacity:0.7;">&lt;${contact.email}&gt;</span>`;
+    container.appendChild(lbl);
+  });
+
+  // Start clock
+  pocClockInterval = startClock(loc.timezone, loc.name, 'poc-clock-time', 'poc-clock-date', 'poc-clock-loc', pocClockInterval);
+}
+
+function draftPOCMail() {
+  const locName = document.getElementById('poc-location').value.trim();
+  const incident = document.getElementById('poc-incident').value.trim();
+  const subLoc = document.getElementById('poc-sublocation').value.trim();
+  const devicesSubject = document.getElementById('poc-devices-subject').value.trim();
+  const devicesBody = document.getElementById('poc-devices-body').value.trim();
+
+  if (!locName) { showToast('⚠ Please enter a Location Name'); return; }
+  if (!incident) { showToast('⚠ Please enter an Incident Number'); return; }
+
+  const loc = getPOCLocation(locName);
+  if (!loc) { showToast('⚠ Location not found. Please select from dropdown.'); return; }
+
+  // Collect checked POC names & emails
+  const checkedBoxes = document.querySelectorAll('input[name="poc-to-check"]:checked');
+  if (!checkedBoxes.length) { showToast('⚠ Please select at least one POC recipient'); return; }
+
+  const selectedNames = Array.from(checkedBoxes).map(cb => cb.value);
+  const selectedEmails = Array.from(checkedBoxes).map(cb => cb.dataset.email);
+  const ccEmails = loc.ccContacts.map(c => c.email).join(', ');
+
+  // Build greeting
+  const greeting = 'Hi ' + selectedNames.join(', ');
+
+  // Location display
+  const fullLocation = subLoc ? `${locName}, ${subLoc}` : locName;
+
+  // Subject line uses devicesSubject
+  const deviceForSubject = devicesSubject ? ` - ${devicesSubject}` : '';
+  const subLocForSubject = subLoc ? `, ${subLoc}` : '';
+  const subject = `Major Incident – ${incident} | ${locName}${subLocForSubject}${deviceForSubject}`;
+
+  // Body uses devicesBody
+  const devicesBodyLine = devicesBody ? `\n${devicesBody}` : '';
+  const body =
+`${greeting},
+
+Good day!
+
+We have received below node down alerts from ${fullLocation}. Could you please check the power supply & connectivity status and update us?
+${devicesBodyLine}
+
+Regards,
+Kranthi Kumar Nakka
+TCS-AMWAY | Network Operations`;
+
+  pocMailData = {
+    to: selectedEmails.join(', '),
+    cc: ccEmails,
+    subject,
+    body
+  };
+
+  // Show preview
+  document.getElementById('poc-mp-to').textContent = pocMailData.to;
+  document.getElementById('poc-mp-cc').textContent = pocMailData.cc;
+  document.getElementById('poc-mp-subject').textContent = pocMailData.subject;
+  document.getElementById('poc-mp-body').textContent = pocMailData.body;
+  document.getElementById('poc-mail-preview').style.display = 'block';
+  document.getElementById('poc-mail-placeholder').style.display = 'none';
+  showToast('✔ POC Mail drafted successfully');
+}
+
+function copyPOCMail() {
+  if (!pocMailData.subject) { showToast('⚠ Draft the mail first'); return; }
+  const full = `To: ${pocMailData.to}\nCc: ${pocMailData.cc}\nSubject: ${pocMailData.subject}\n\n${pocMailData.body}`;
+  navigator.clipboard.writeText(full).then(() => showToast('✔ Mail copied to clipboard'));
+}
+
+function openOutlookPOC() {
+  if (!pocMailData.subject) { showToast('⚠ Draft the mail first'); return; }
+  const toParam = encodeURIComponent(pocMailData.to);
+  const ccParam = encodeURIComponent(pocMailData.cc);
+  const subParam = encodeURIComponent(pocMailData.subject);
+  const bodyParam = encodeURIComponent(pocMailData.body);
+  // mailto: will open default mail client (Outlook if configured)
+  const mailtoLink = `mailto:${toParam}?cc=${ccParam}&subject=${subParam}&body=${bodyParam}`;
+  window.location.href = mailtoLink;
+  showToast('✔ Opening mail client…');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOOL E – AUTO POC INCIDENT MESSAGE GENERATOR
+// ═══════════════════════════════════════════════════════════════
+function filterPOCMsgLocations() {
+  filterPOCAutoComplete('pocmsg-location', 'pocmsg-loc-list', onPOCMsgLocationSelect);
+}
+
+function onPOCMsgLocationSelect(loc) {
+  pocmsgClockInterval = startClock(loc.timezone, loc.name, 'pocmsg-clock-time', 'pocmsg-clock-date', 'pocmsg-clock-loc', pocmsgClockInterval);
+}
+
+function draftPOCMessage() {
+  const locName = document.getElementById('pocmsg-location').value.trim();
+  const incident = document.getElementById('pocmsg-incident').value.trim();
+  const subLoc = document.getElementById('pocmsg-sublocation').value.trim();
+  const bhEl = document.querySelector('input[name="pocmsg-bh"]:checked');
+  const dtEl = document.querySelector('input[name="pocmsg-dtype"]:checked');
+  const devices = document.getElementById('pocmsg-devices').value.trim();
+
+  if (!locName) { showToast('⚠ Please enter a Location Name'); return; }
+  if (!incident) { showToast('⚠ Please enter an Incident Number'); return; }
+  if (!bhEl) { showToast('⚠ Please select Business Hours Status'); return; }
+  if (!dtEl) { showToast('⚠ Please select Device Type'); return; }
+
+  const loc = getPOCLocation(locName);
+  if (!loc) { showToast('⚠ Location not found. Please select from dropdown.'); return; }
+
+  const bh = bhEl.value;
+  const dtype = dtEl.value;
+  const deviceLabel = dtype === 'nodes' ? 'nodes' : 'IT Devices';
+
+  // Full location string with optional sub-location
+  const fullLoc = subLoc ? `${locName}, ${subLoc}` : locName;
+
+  // Build greeting from To contacts of the selected location
+  const greetingNames = loc.toContacts.map(c => c.name).join(', ');
+  const devicesBody = devices ? `\n${devices}` : '';
+
+  let msg = '';
+
+  if (bh === 'offbusiness') {
+    msg =
+`Hi ${greetingNames}
+
+P2-${incident}-Received below ${deviceLabel} are down at ${fullLoc} Location. Suspecting power outage at the site. However, these are off business hours. We have dropped an email to PoC to check the physical connectivity and power status at the site. We will follow up with PoC and Keep you posted with further updates.
+
+Working hours – ${loc.workingHours}
+${devicesBody}`;
+  } else {
+    msg =
+`Hi ${greetingNames}
+
+P2-${incident}-Received below ${deviceLabel} are down at ${fullLoc} Location. Suspecting power outage at the site. We have dropped an email to PoC to check the physical connectivity and power status at the site. We will follow up with PoC and Keep you posted with further updates.
+
+Working hours – ${loc.workingHours}
+${devicesBody}`;
+  }
+
+  document.getElementById('pocmsg-output').textContent = msg;
+  document.getElementById('pocmsg-output').style.fontStyle = 'normal';
+  document.getElementById('pocmsg-output').style.color = 'var(--text-dark)';
+  showToast('✔ POC Incident Message drafted');
+}
+
+function copyPOCMessage() {
+  const txt = document.getElementById('pocmsg-output').textContent;
+  if (!txt || txt.includes('Drafted message will appear')) { showToast('⚠ Draft a message first'); return; }
+  navigator.clipboard.writeText(txt).then(() => showToast('✔ Message copied to clipboard'));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  ████████████████████████████████████████████████████████████
+//  ██  TOOL F – INCM SERVER DATA                              ██
+//  ████████████████████████████████████████████████████████════
+//
+//  HOW TO ADD A NEW SERVER:
+//  Copy ONE block below (from the opening { to the closing },)
+//  and paste it BEFORE the closing ]; line at the bottom.
+//  Fill in all fields for your new server.
+//
+//  FIELDS EXPLAINED:
+//    serverName    → The server name typed in the search box (e.g. "Server 1")
+//    location      → Physical location / data centre name
+//    contacts      → Array of local contact names (add as many as needed)
+//    phones        → Array of local contact phone numbers (same order as contacts)
+//    workingHours  → Working hours text for this server's location
+//
+//  EXAMPLE BLOCK TO COPY AND FILL:
+//  {
+//    serverName: "Server Name Here",
+//    location: "City / DC Name Here",
+//    contacts: ["Contact Name 1", "Contact Name 2"],
+//    phones: ["9999999999", "8888888888"],
+//    workingHours: "10 AM to 5 PM"
+//  },
+//
+// ═══════════════════════════════════════════════════════════════
+const INCM_SERVERS = [
+
+  // ── SERVER 1 ─────────────────────────────────────────────────
+  //  TO EDIT: Change serverName, location, contacts, phones, workingHours
+  {
+    serverName: "Server 1",
+    location: "New York",
+    contacts: ["Kranthi", "Priyanka"],
+    phones: ["98765432112", "9876545678"],
+    workingHours: "10 AM to 5 PM"
+  },
+
+  // ── SERVER 2 ─────────────────────────────────────────────────
+  {
+    serverName: "Server 2",
+    location: "Hyderabad",
+    contacts: ["Elena", "Srinu"],
+    phones: ["98765432112", "9876545678"],
+    workingHours: "10 AM to 5 PM (Mon-Fri), 10 AM to 1 PM (Sat-Sun)"
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  ▼▼▼  ADD YOUR NEW SERVERS ABOVE THIS LINE  ▼▼▼
+  //  Remember: all blocks except the LAST must end with a comma (,)
+  // ═══════════════════════════════════════════════════════════════
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  TOOL F – INCM SERVER SEARCH
+// ═══════════════════════════════════════════════════════════════
+function filterINCMServers() {
+  const val = document.getElementById('incm-server-input').value.toLowerCase().trim();
+  const list = document.getElementById('incm-server-list');
+  list.innerHTML = '';
+  document.getElementById('incm-result-wrap').style.display = 'none';
+  document.getElementById('incm-not-found').style.display = 'none';
+
+  if (!val) { list.classList.remove('show'); return; }
+
+  const matches = INCM_SERVERS.filter(s => s.serverName.toLowerCase().includes(val));
+  if (!matches.length) { list.classList.remove('show'); return; }
+
+  matches.forEach(srv => {
+    const item = document.createElement('div');
+    item.className = 'autocomplete-item';
+    item.textContent = srv.serverName;
+    item.onclick = () => {
+      document.getElementById('incm-server-input').value = srv.serverName;
+      list.classList.remove('show');
+      showINCMServer(srv.serverName);
+    };
+    list.appendChild(item);
+  });
+  list.classList.add('show');
+}
+
+function showINCMServer(name) {
+  const srv = INCM_SERVERS.find(s => s.serverName.toLowerCase() === name.toLowerCase().trim());
+  const notFound = document.getElementById('incm-not-found');
+  const resultWrap = document.getElementById('incm-result-wrap');
+
+  if (!srv) {
+    notFound.style.display = 'block';
+    resultWrap.style.display = 'none';
+    return;
+  }
+
+  notFound.style.display = 'none';
+  document.getElementById('incm-res-servername').textContent = srv.serverName;
+  document.getElementById('incm-res-location').textContent = srv.location;
+  document.getElementById('incm-res-contacts').textContent = srv.contacts.join(', ');
+  document.getElementById('incm-res-phones').textContent = srv.phones.join(', ');
+  document.getElementById('incm-res-hours').textContent = srv.workingHours;
+  resultWrap.style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOOL G – INCIDENT CLOSURE TEMPLATES
+// ═══════════════════════════════════════════════════════════════
+const INCIDENT_TEMPLATES = {
+  'server-genuine': {
+    title: 'Server Down — Genuine Alert',
+    text: `Root cause for the server downtime: <>
+
+This is a genuine alert.
+
+Duration of outage : 
+
+Hence, closing the incident.`
+  },
+  'server-false': {
+    title: 'Server Down — False Alert',
+    text: `We have logged in to the server and confirmed that it was up and running at the time the alert was generated.
+
+This is a false alert.
+
+Hence, closing the incident.`
+  },
+  'server-change': {
+    title: 'Server Down — Change Request',
+    text: `We have received confirmation that this alert was triggered due to the implementation of change request <>
+
+This is a maintenance Alert.
+
+Hence, closing the incident.`
+  },
+  'server-l2': {
+    title: 'Server Down — L2 Teams Activity',
+    text: `We have received confirmation from the application team that this alert was generated due to their activity.
+
+This is a maintenance alert.
+
+Hence, closing the incident.`
+  },
+  'server-reboot': {
+    title: 'Server Reboot',
+    text: `Incident caused - 
+
+Actions taken : Server is pinging and also attached screenshot for reference and uptime is 
+
+Resolution Summary: 
+
+User/Application team/Confirmation Received (Yes/No): NA`
+  },
+  'service-down': {
+    title: 'Service Down',
+    text: `Incident caused - 
+
+Actions taken : Checked the service status and logged into server. Service is up now.
+
+Resolution Summary: 
+
+User/Application team/Confirmation Received (Yes/No): NA`
+  },
+  'linux-cpu': {
+    title: 'Linux CPU Utilization',
+    text: `Incident caused - 
+
+Actions taken : Checked the pinging status and logged into server. Server is up now.
+
+Resolution comment : 
+
+User/Application team/Confirmation Received (Yes/No): NA
+
+Log - `
+  },
+  'linux-mem': {
+    title: 'Linux Memory Utilization',
+    text: `Incident caused - 
+
+Actions taken : Checked the pinging status and logged into server. Server is up now.
+
+Resolution comment : 
+
+User/Application team/Confirmation Received (Yes/No): NA
+
+Log - `
+  },
+  'win-cpu': {
+    title: 'Windows CPU Utilization',
+    text: `Incident caused - 
+
+Actions taken : Monitored for 2 hours and we could see that the CPU utilization is normal now and below the threshold value.
+
+Resolution Summary: We could see that the CPU utilization is normal now and below the threshold value. Also attached the screenshot for reference.
+
+User/Application team/Confirmation Received (Yes/No): NA`
+  },
+  'win-mem': {
+    title: 'Windows Memory Utilization',
+    text: `Incident caused - 
+
+Actions taken : Monitored for 2 hours and we could see that the Memory utilization is normal now and below the threshold value.
+
+Resolution Summary: We could see that the Memory utilization is normal now and below the threshold value. Also attached the screenshot for reference.
+
+User/Application team/Confirmation Received (Yes/No): NA`
+  },
+  'win-disk': {
+    title: 'Windows C Drive Disk Utilization',
+    text: `Incident caused - 
+
+Actions taken : Logged into the server and cleared some unwanted files from C drive
+
+Resolution Summary: 
+
+User/Application team/Confirmation Received (Yes/No): NA`
+  },
+  'linux-disk': {
+    title: 'Linux Disk Utilization',
+    text: `Incident caused - 
+
+Actions taken : Logged into the server and checked the usage % of the file system, now it is below threshold, Hence closing the incident.
+
+Resolution Summary: Logged into the server and checked the usage % of the file system, now it is below threshold, Hence closing the incident.
+
+User/Application team/Confirmation Received (Yes/No): NA
+
+Log - `
+  }
+};
+
+function openTemplate(key) {
+  const tpl = INCIDENT_TEMPLATES[key];
+  if (!tpl) return;
+  document.getElementById('tpl-modal-title').textContent = tpl.title;
+  document.getElementById('tpl-modal-text').textContent = tpl.text;
+  document.getElementById('tpl-overlay').classList.add('show');
+}
+
+function closeTplModal() {
+  document.getElementById('tpl-overlay').classList.remove('show');
+}
+
+function closeTplModalOutside(e) {
+  if (e.target === document.getElementById('tpl-overlay')) closeTplModal();
+}
+
+function copyTplText() {
+  const txt = document.getElementById('tpl-modal-text').textContent;
+  navigator.clipboard.writeText(txt).then(() => showToast('✔ Template copied to clipboard'));
+}
+
+</script>
+</body>
+</html>
